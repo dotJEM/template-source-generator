@@ -1,0 +1,1 @@
+﻿SELECT ONE FROM [@{table}];
