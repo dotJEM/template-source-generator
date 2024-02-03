@@ -1,18 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- When the generator is added via NuGet, these should be present via the props file. -->
+  <!-- In other words, you do not need to import the props file when referencing the NuGet package. -->
+  <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJem.SourceGen.props"/>
+  
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+    <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>-->
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <!-- The namespace under which we generate the constants. -->
+    <DotJEMTemplateVisibility>public</DotJEMTemplateVisibility>
+    <!-- The visibility of the classes in which the constants are declared. -->
   </PropertyGroup>
 
   <ItemGroup>
     <!-- Exclude the output of source generators from the compilation -->
-    <Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-    <None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+    <!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+    <None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->
   </ItemGroup>
 
 
@@ -20,20 +30,18 @@
     <None Remove="HtmlFiles\*.html" />
     <None Remove="SqlFiles\*.sql" />
     <None Remove="TextFiles\*.txt" />
+    <None Remove="OtherFiles\TestOther.tcs" />
   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="HtmlFiles\*.html" TemplateClass="HtmlTemplates" />
     <AdditionalFiles Include="SqlFiles\*.sql" TemplateClass="SqlTemplates" />
     <AdditionalFiles Include="TextFiles\*.txt" TemplateClass="TextTemplates" />
+    <AdditionalFiles Include="OtherFiles\TestOther.tcs" TemplateClass="CSharpTemplates" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DotJEM.SourceGen.TemplateGenerator\DotJEM.SourceGen.TemplateGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Generated\" />
   </ItemGroup>
 
 
