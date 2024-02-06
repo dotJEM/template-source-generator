@@ -8,8 +8,7 @@ public class MyFrameworkClassTest
     [Test]
     public void SayHello_ReturnsHello()
     {
-        Assert.Fail();
 
-        SqlTemplates.SqlFileOneTemplates_default("");
+        Assert.That(TextTemplates.TextFileThreeTemplates_default("f"), Is.EqualTo(""));
     }
 }

@@ -2,15 +2,15 @@
 
   <!-- When the generator is added via NuGet, these should be present via the props file. -->
   <!-- In other words, you do not need to import the props file when referencing the NuGet package. -->
-  <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJem.SourceGen.props"/>
+  <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJem.SourceGen.props" />
   
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
-    <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>-->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <!--<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>-->
   </PropertyGroup>
   
   <PropertyGroup>
@@ -18,12 +18,6 @@
     <DotJEMTemplateVisibility>public</DotJEMTemplateVisibility>
     <!-- The visibility of the classes in which the constants are declared. -->
   </PropertyGroup>
-
-  <ItemGroup>
-    <!-- Exclude the output of source generators from the compilation -->
-    <!--<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-    <None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />-->
-  </ItemGroup>
 
 
   <ItemGroup>
