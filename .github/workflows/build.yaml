@@ -28,8 +28,8 @@ jobs:
         echo "template=$template"
         echo "shortsha=$shortsha" >> $GITHUB_OUTPUT
         echo "shortsha=$shortsha"
-        echo "semver=${template//build/$build}+sha.$shortsha" >> $GITHUB_OUTPUT
-        echo "semver=${template//build/$build}+sha.$shortsha"
+        echo "semver=${template//build/$build}-beta.001+sha.$shortsha" >> $GITHUB_OUTPUT
+        echo "semver=${template//build/$build}-beta.001+sha.$shortsha"
         echo "msver=${template//build/$build}.0" >> $GITHUB_OUTPUT
         echo "msver=${template//build/$build}.0"
         
