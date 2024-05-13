@@ -24,6 +24,7 @@
     <FileVersion></FileVersion>
 
     <IsRoslynComponent>true</IsRoslynComponent>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 
     <PackageIcon>avatar.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
