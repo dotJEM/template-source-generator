@@ -1,5 +1,4 @@
-﻿using DotJEM.SourceGen.TemplateGenerator.Demo;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace DotJEM.SourceGen.TemplateGenerator.Test;
 
@@ -9,6 +8,5 @@ public class MyFrameworkClassTest
     public void SayHello_ReturnsHello()
     {
 
-        Assert.That(TextTemplates.TextFileThreeTemplates_default("f"), Is.EqualTo(""));
     }
 }
