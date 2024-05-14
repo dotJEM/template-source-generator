@@ -2,9 +2,15 @@
   <ItemGroup>
     <CompilerVisibleProperty Include="DotJEMTemplateVisibility"/>
     <CompilerVisibleProperty Include="DotJEMTemplateNamespace"/>
+    <CompilerVisibleProperty Include="DotJEMTemplateMethodName"/>
+    <CompilerVisibleProperty Include="DotJEMTemplateParameterPattern"/>
+    <CompilerVisibleProperty Include="DotJEMIncludeAllAdditionalFiles"/>
 
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="TemplateClass"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Visibility"/>
     <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Namespace"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="MethodNameTemplate"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ParameterPattern"/>
+    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsTemplates"/>
   </ItemGroup>
 </Project>

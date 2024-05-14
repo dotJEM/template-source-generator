@@ -1,6 +1,6 @@
 ﻿namespace DotJEM.SourceGen.TemplateGenerator.Util;
 
-public readonly record struct StringTemplate(TemplateOptions Options, string Name, string Key, string Source, string[] Args)
+public readonly record struct StringTemplate(TemplateOptions Options, string MethodName, string Source, string[] Args)
 {
     public override string ToString()
     {
@@ -9,7 +9,7 @@ public readonly record struct StringTemplate(TemplateOptions Options, string Nam
 
                  {{Options.Visibility}} static partial class {{Options.ClassName}}
                  {
-                      public static string {{Name}}_{{Key}}({{string.Join(", ", Args)}})
+                      public static string {{MethodName}}({{string.Join(", ", Args)}})
                       {
                           return {{Source}};
                       }

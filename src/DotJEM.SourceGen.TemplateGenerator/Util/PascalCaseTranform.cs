@@ -13,6 +13,6 @@ public static class PascalCaseTranform
     {
         return $"{pascalCaseFilter.Replace(fileExtension, match => match.Index == 0
             ? match.ToString().ToUpperInvariant()
-            : match.ToString().ToUpperInvariant().Substring(1, 1))}Templates";
+            : match.ToString().ToUpperInvariant().Substring(1, 1))}";
     }
 }

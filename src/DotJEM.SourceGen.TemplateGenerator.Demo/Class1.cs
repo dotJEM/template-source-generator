@@ -4,8 +4,8 @@
     {
         public void Test()
         {
-            TextTemplates.TextFileFourTemplates_default("");
-            CSharpTemplates.TestOtherTemplates_default("");
+            
+
         }
     }
 }

@@ -9,6 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotJEM.SourceGen.TemplateGe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotJEM.SourceGen.TemplateGenerator.Demo", "DotJEM.SourceGen.TemplateGenerator.Demo\DotJEM.SourceGen.TemplateGenerator.Demo.csproj", "{32595ECD-FEB9-47A8-B004-F31DFA6C4903}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{8D9172FD-766B-4930-ADBD-4B12006F0F32}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\avatar.png = ..\avatar.png
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\VERSION = ..\VERSION
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

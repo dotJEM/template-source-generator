@@ -28,6 +28,7 @@ public class StringTemplateBuilder
         string name = PascalCaseTranform.Transform(Path.GetFileNameWithoutExtension(content.Path));
         string sourceFromFile = content.GetText(token)!.ToString();
 
+        Regex parameterPattern = options.ParameterPatternRegex ?? pattern;
         foreach ((string Key, string Template) in new TemplateReader().ReadToEnd(new StringReader(sourceFromFile)))
         {
             string source = Template;
@@ -36,7 +37,7 @@ public class StringTemplateBuilder
             HashSet<string> args = new();
 
             source = nlPattern.Replace(source, "\\n");
-            foreach (Match match in pattern.Matches(source).Cast<Match>())
+            foreach (Match match in parameterPattern.Matches(source).Cast<Match>())
             {
                 string before = source.Substring(index, match.Index - index).Replace("\"", "\\\"");
                 string key = match.Groups[1].Value;
@@ -58,7 +59,40 @@ public class StringTemplateBuilder
             builder.Append(remainder);
             builder.Append("\"");
 
-            yield return new(options, name, Key, builder.ToString(), args.ToArray());
+            string methodName = GenerateMethodName(options, name, PascalCaseTranform.Transform(Key));
+            yield return new(options, methodName, builder.ToString(), args.ToArray());
         }
     }
+
+    public string GenerateMethodName(TemplateOptions options, string templateName, string templateKey)
+    {
+        if (string.IsNullOrWhiteSpace(options.MethodNameTemplate))
+            return string.IsNullOrWhiteSpace(templateKey) ? templateName : $"{templateName}_{templateKey}";
+
+        Regex parameterPattern = options.ParameterPatternRegex ?? pattern;
+        string[] templates = options.MethodNameTemplate.Split('|');
+
+        string multiTemplatesTemplate = templates[0];
+        string singleTemplatesTemplate= templates[0];
+        if (templates.Length >1)
+            singleTemplatesTemplate= templates[1];
+
+        string templateToUse = string.IsNullOrWhiteSpace(templateKey) 
+            ? singleTemplatesTemplate 
+            : multiTemplatesTemplate;
+
+        return parameterPattern.Replace(templateToUse, match =>
+        {
+            string key = match.Groups[1].Value;
+            return key switch
+            {
+                "name" => templateName,
+                "templateName" => templateName,
+                "key" => templateKey,
+                "templateKey" => templateKey,
+                _ => match.Value
+            };
+        });
+    }
 }
+

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using DotJEM.SourceGen.TemplateGenerator.Util;
 using Microsoft.CodeAnalysis;
@@ -29,8 +30,13 @@ public class TemplateGenerator : IIncrementalGenerator
             provider.GlobalOptions.TryGetValue($"build_property.RootNamespace", out string rootNamespace);
             provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateVisibility", out string defaultVisibility);
             provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateNamespace", out string defaultNamespace);
+            provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateMethodName", out string defaultMethodNameTemplate);
+            provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateParameterPattern", out string defaultParameterPattern);
+            provider.GlobalOptions.TryGetValue($"build_property.DotJEMIncludeAllAdditionalFiles", out string includeAllAdditionalFiles);
             if(string.IsNullOrWhiteSpace(defaultNamespace)) defaultNamespace = rootNamespace;
-            return new TemplateOptions(defaultNamespace, defaultVisibility, null);
+            return new TemplateOptions(
+                string.IsNullOrWhiteSpace(includeAllAdditionalFiles) || includeAllAdditionalFiles.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase),
+                defaultNamespace, defaultVisibility, null, defaultMethodNameTemplate, defaultParameterPattern);
         });
 
         IncrementalValuesProvider<(AdditionalText text, TemplateOptions options)> templateFilesAndSettings = context.AdditionalTextsProvider
@@ -42,9 +48,18 @@ public class TemplateGenerator : IIncrementalGenerator
                 options.TryGetValue($"build_metadata.AdditionalFiles.TemplateClass", out string className);
                 options.TryGetValue($"build_metadata.AdditionalFiles.Visibility", out string visibility);
                 options.TryGetValue($"build_metadata.AdditionalFiles.Namespace", out string @namespace);
-                return (text, new TemplateOptions(@namespace, 
-                    visibility ?? "internal", 
-                    className ?? PascalCaseTranform.Transform(Path.GetExtension(text.Path).Trim('.'))));
+                options.TryGetValue($"build_metadata.AdditionalFiles.MethodNameTemplate", out string methodNameTemplate);
+                options.TryGetValue($"build_metadata.AdditionalFiles.ParameterPattern", out string parameterPattern);
+                options.TryGetValue($"build_metadata.AdditionalFiles.IsTemplates", out string isTemplates);
+                return (text, 
+                    new TemplateOptions(
+                        string.IsNullOrWhiteSpace(isTemplates) || isTemplates.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase),
+                        @namespace, 
+                        visibility ?? "internal", 
+                        className ?? PascalCaseTranform.Transform(Path.GetExtension(text.Path).Trim('.')) + "Templates",
+                        methodNameTemplate,
+                        parameterPattern)
+                    );
             });
 
         IncrementalValuesProvider<(AdditionalText text, TemplateOptions options)> merged = templateFilesAndSettings
@@ -57,10 +72,11 @@ public class TemplateGenerator : IIncrementalGenerator
             });
 
         IncrementalValuesProvider<StringTemplate> templates = merged
+            .Where(tuple => tuple.options.ProcessAsTemplate is null or true)
             .SelectMany((tuple, token) => builder.Build(tuple.text, tuple.options, token));
 
         context.RegisterSourceOutput(templates, (spc, template) => {
-            spc.AddSource($"{template.Options.ClassName}.{template.Name}.{template.Key}.g.cs", template.ToString());
+            spc.AddSource($"{template.Options.ClassName}.{template.MethodName}.g.cs", template.ToString());
         });
     }
 }
