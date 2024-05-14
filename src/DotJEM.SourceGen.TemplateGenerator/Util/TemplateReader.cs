@@ -9,7 +9,7 @@ public class TemplateReader
     public IEnumerable<(string Key, string Template)> ReadToEnd(StringReader reader)
     {
         StringBuilder buffer = new();
-        string section = "default";
+        string section = "";
         while (reader.ReadLine() is { } line)
         {
             if (line.StartsWith("--start"))
