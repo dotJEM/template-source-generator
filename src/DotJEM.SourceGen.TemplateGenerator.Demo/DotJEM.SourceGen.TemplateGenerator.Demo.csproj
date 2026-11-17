@@ -2,7 +2,7 @@
 
   <!-- When the generator is added via NuGet, these should be present via the props file. -->
   <!-- In other words, you do not need to import the props file when referencing the NuGet package. -->
-  <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJem.SourceGen.props" />
+  <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJEM.SourceGen.TemplateGenerator.props" />
   
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
