@@ -1,4 +1,8 @@
-﻿namespace DotJEM.SourceGen.TemplateGenerator.Util;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+
+namespace DotJEM.SourceGen.TemplateGenerator.Util;
 
 public readonly record struct StringTemplate(
     string Namespace, string ClassName, string Visibility,
@@ -17,5 +21,21 @@ public readonly record struct StringTemplate(
                       }
                  }
                  """";
+    }
+}
+
+internal sealed class TemplateBuildResult
+{
+    public ImmutableArray<StringTemplate> Templates { get; }
+    public Diagnostic? Diagnostic { get; }
+
+    public TemplateBuildResult(IEnumerable<StringTemplate> templates)
+    {
+        Templates = [..templates];
+    }
+    public TemplateBuildResult(Diagnostic diagnostic)
+    {
+        Diagnostic = diagnostic;
+        Templates = [];
     }
 }

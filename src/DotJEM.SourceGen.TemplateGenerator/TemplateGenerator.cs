@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 using DotJEM.SourceGen.TemplateGenerator.Util;
@@ -79,13 +81,42 @@ public class TemplateGenerator : IIncrementalGenerator
                 return (text, options: options | defaults);
             });
 
-        IncrementalValuesProvider<StringTemplate> templates = merged
+        IncrementalValuesProvider<TemplateBuildResult> results = merged
             .Where(tuple => tuple.options.ProcessAsTemplate is null or true)
-            .SelectMany((tuple, token) => builder.Build(tuple.text, tuple.options, token));
+            .Select((tuple, token) =>
+            {
+                try
+                {
+                    return new TemplateBuildResult(builder.Build(tuple.text, tuple.options, token));
+                }
+                catch (Exception e)
+                {
+                    return new TemplateBuildResult(Diagnostic.Create(
+                        GenerationFailed, 
+                        Location.None,
+                        $"Failed to generate {tuple.text.Path}",
+                        e.ToString()));
+                }
+            });
+
+        context.RegisterSourceOutput(results, (productionContext, result) => {
+            if (result.Diagnostic is { } diagnostic) productionContext.ReportDiagnostic(diagnostic);
+        });
+
+        IncrementalValuesProvider<StringTemplate> templates = results.SelectMany((result, token) => result.Templates);
 
         context.RegisterSourceOutput(templates, (spc, template) => {
-
-            spc.AddSource($"{template.ClassName}.{template.MethodName}.g.cs", template.ToString());
+            try
+            {
+                spc.AddSource($"{template.ClassName}.{template.MethodName}.g.cs", template.ToString());
+            }
+            catch (Exception e)
+            {
+                spc.ReportDiagnostic(Diagnostic.Create(
+                    GenerationFailed, Location.None,
+                    $"Failed to generate {template.ClassName}.{template.MethodName}.g.cs",
+                    e.ToString()));
+            }
         });
     }
 
@@ -96,4 +127,12 @@ public class TemplateGenerator : IIncrementalGenerator
         if (value.Equals(bool.FalseString, StringComparison.InvariantCultureIgnoreCase)) return false;
         return null;
     }
+
+    private static readonly DiagnosticDescriptor GenerationFailed = new(
+    id: "MYGEN001",
+    title: "Source generation failed",
+    messageFormat: "Source generation failed: {0}\n{1}",
+    category: "MyGenerator",
+    defaultSeverity: DiagnosticSeverity.Error,
+    isEnabledByDefault: true);
 }
