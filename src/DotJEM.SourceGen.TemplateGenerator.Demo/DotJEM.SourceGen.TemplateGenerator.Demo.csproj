@@ -5,7 +5,7 @@
   <Import Project="..\DotJEM.SourceGen.TemplateGenerator\build\DotJem.SourceGen.props" />
   
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 

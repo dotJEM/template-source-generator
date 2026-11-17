@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 7.x.x
+        dotnet-version: 10.x.x
         
     - name: Calculate Version Parameters
       id: version
@@ -58,8 +58,21 @@ jobs:
         /p:PackageVersion=${{steps.version.outputs.semver}}
         /p:AssemblyVersion=${{steps.version.outputs.msver}}
         /p:FileVersion=${{steps.version.outputs.msver}}
-      
+
+    - name: NuGet login
+      if: github.event_name == 'push'
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: ${{ secrets.NUGET_USER }}
+        
     - name: Publish
       if: github.event_name == 'push'
       working-directory: ./src
-      run: dotnet nuget push **/*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json --skip-duplicate 
+      env:
+        NUGET_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+      run: >
+        dotnet nuget push "**/*.nupkg"
+        --api-key "$NUGET_API_KEY"
+        --source https://api.nuget.org/v3/index.json
+        --skip-duplicate
