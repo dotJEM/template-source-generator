@@ -11,6 +11,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -28,8 +32,8 @@ jobs:
         echo "template=$template"
         echo "shortsha=$shortsha" >> $GITHUB_OUTPUT
         echo "shortsha=$shortsha"
-        echo "semver=${template//build/$build}-beta001+sha.$shortsha" >> $GITHUB_OUTPUT
-        echo "semver=${template//build/$build}-beta001+sha.$shortsha"
+        echo "semver=${template//build/$build}+sha.$shortsha" >> $GITHUB_OUTPUT
+        echo "semver=${template//build/$build}+sha.$shortsha"
         echo "msver=${template//build/$build}.0" >> $GITHUB_OUTPUT
         echo "msver=${template//build/$build}.0"
         
