@@ -33,10 +33,16 @@ public class TemplateGenerator : IIncrementalGenerator
             provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateMethodName", out string defaultMethodNameTemplate);
             provider.GlobalOptions.TryGetValue($"build_property.DotJEMTemplateParameterPattern", out string defaultParameterPattern);
             provider.GlobalOptions.TryGetValue($"build_property.DotJEMIncludeAllAdditionalFiles", out string includeAllAdditionalFiles);
-            if(string.IsNullOrWhiteSpace(defaultNamespace)) defaultNamespace = rootNamespace;
+            provider.GlobalOptions.TryGetValue($"build_property.DotJEMFileAsClassName", out string fileAsClassName);
+            if (string.IsNullOrWhiteSpace(defaultNamespace)) defaultNamespace = rootNamespace;
             return new TemplateOptions(
-                string.IsNullOrWhiteSpace(includeAllAdditionalFiles) || includeAllAdditionalFiles.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase),
-                defaultNamespace, defaultVisibility, null, defaultMethodNameTemplate, defaultParameterPattern);
+                ConvertToBoolean(includeAllAdditionalFiles),
+                ConvertToBoolean(fileAsClassName),
+                defaultNamespace,
+                defaultVisibility, 
+                null,
+                defaultMethodNameTemplate,
+                defaultParameterPattern);
         });
 
         IncrementalValuesProvider<(AdditionalText text, TemplateOptions options)> templateFilesAndSettings = context.AdditionalTextsProvider
@@ -51,9 +57,11 @@ public class TemplateGenerator : IIncrementalGenerator
                 options.TryGetValue($"build_metadata.AdditionalFiles.MethodNameTemplate", out string methodNameTemplate);
                 options.TryGetValue($"build_metadata.AdditionalFiles.ParameterPattern", out string parameterPattern);
                 options.TryGetValue($"build_metadata.AdditionalFiles.IsTemplates", out string isTemplates);
+                options.TryGetValue($"build_metadata.AdditionalFiles.FileAsClassName", out string fileAsClassName);
                 return (text, 
                     new TemplateOptions(
-                        string.IsNullOrWhiteSpace(isTemplates) || isTemplates.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase),
+                        ConvertToBoolean(isTemplates),
+                        ConvertToBoolean(fileAsClassName),
                         @namespace, 
                         visibility ?? "internal", 
                         className ?? PascalCaseTranform.Transform(Path.GetExtension(text.Path).Trim('.')) + "Templates",
@@ -76,7 +84,16 @@ public class TemplateGenerator : IIncrementalGenerator
             .SelectMany((tuple, token) => builder.Build(tuple.text, tuple.options, token));
 
         context.RegisterSourceOutput(templates, (spc, template) => {
-            spc.AddSource($"{template.Options.ClassName}.{template.MethodName}.g.cs", template.ToString());
+
+            spc.AddSource($"{template.ClassName}.{template.MethodName}.g.cs", template.ToString());
         });
+    }
+
+    private static bool? ConvertToBoolean(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        if (value.Equals(bool.TrueString, StringComparison.InvariantCultureIgnoreCase)) return true;
+        if (value.Equals(bool.FalseString, StringComparison.InvariantCultureIgnoreCase)) return false;
+        return null;
     }
 }

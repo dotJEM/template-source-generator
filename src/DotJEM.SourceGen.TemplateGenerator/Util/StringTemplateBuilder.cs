@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using Microsoft.CodeAnalysis;
+using System.Xml.Linq;
 
 namespace DotJEM.SourceGen.TemplateGenerator.Util;
 
@@ -60,14 +61,22 @@ public class StringTemplateBuilder
             builder.Append("\"");
 
             string methodName = GenerateMethodName(options, name, PascalCaseTranform.Transform(Key));
-            yield return new(options, methodName, builder.ToString(), args.ToArray());
+            string className = options.FileAsClassName.HasValue && options.FileAsClassName.Value ? name : options.ClassName;
+            yield return new(options.Namespace, className, options.Visibility, methodName, builder.ToString(), args.ToArray());
         }
     }
 
     public string GenerateMethodName(TemplateOptions options, string templateName, string templateKey)
     {
         if (string.IsNullOrWhiteSpace(options.MethodNameTemplate))
-            return string.IsNullOrWhiteSpace(templateKey) ? templateName : $"{templateName}_{templateKey}";
+        {
+            if (options.FileAsClassName.HasValue && options.FileAsClassName.Value)
+                return string.IsNullOrWhiteSpace(templateKey) ? templateKey : "Format";
+            
+            return string.IsNullOrWhiteSpace(templateKey) 
+                ? templateName 
+                : $"{templateName}_{templateKey}";
+        }
 
         Regex parameterPattern = options.ParameterPatternRegex ?? pattern;
         string[] templates = options.MethodNameTemplate.Split('|');
