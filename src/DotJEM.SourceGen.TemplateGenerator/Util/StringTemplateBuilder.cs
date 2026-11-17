@@ -71,7 +71,7 @@ public class StringTemplateBuilder
         if (string.IsNullOrWhiteSpace(options.MethodNameTemplate))
         {
             if (options.FileAsClassName.HasValue && options.FileAsClassName.Value)
-                return string.IsNullOrWhiteSpace(templateKey) ? templateKey : "Format";
+                return !string.IsNullOrWhiteSpace(templateKey) ? templateKey : "Format";
             
             return string.IsNullOrWhiteSpace(templateKey) 
                 ? templateName 

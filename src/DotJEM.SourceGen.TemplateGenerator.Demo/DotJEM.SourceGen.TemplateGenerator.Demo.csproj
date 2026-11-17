@@ -15,8 +15,9 @@
   
   <PropertyGroup>
     <!-- The namespace under which we generate the constants. -->
-    <DotJEMTemplateVisibility>public</DotJEMTemplateVisibility>
-    <!-- The visibility of the classes in which the constants are declared. -->
+	  <DotJEMFileAsClassName>true</DotJEMFileAsClassName>
+	  <DotJEMTemplateVisibility>public</DotJEMTemplateVisibility>
+	  <!-- The visibility of the classes in which the constants are declared. -->
   </PropertyGroup>
 
 

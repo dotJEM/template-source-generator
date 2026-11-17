@@ -1,16 +1,18 @@
 ﻿<Project>
-  <ItemGroup>
-    <CompilerVisibleProperty Include="DotJEMTemplateVisibility"/>
-    <CompilerVisibleProperty Include="DotJEMTemplateNamespace"/>
-    <CompilerVisibleProperty Include="DotJEMTemplateMethodName"/>
-    <CompilerVisibleProperty Include="DotJEMTemplateParameterPattern"/>
-    <CompilerVisibleProperty Include="DotJEMIncludeAllAdditionalFiles"/>
+	<ItemGroup>
+		<CompilerVisibleProperty Include="DotJEMTemplateVisibility"/>
+		<CompilerVisibleProperty Include="DotJEMTemplateNamespace"/>
+		<CompilerVisibleProperty Include="DotJEMTemplateMethodName"/>
+		<CompilerVisibleProperty Include="DotJEMTemplateParameterPattern"/>
+		<CompilerVisibleProperty Include="DotJEMIncludeAllAdditionalFiles"/>
+		<CompilerVisibleProperty Include="DotJEMFileAsClassName"/>
 
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="TemplateClass"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Visibility"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Namespace"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="MethodNameTemplate"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ParameterPattern"/>
-    <CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsTemplates"/>
-  </ItemGroup>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="TemplateClass"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Visibility"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="Namespace"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="MethodNameTemplate"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="ParameterPattern"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="IsTemplates"/>
+		<CompilerVisibleItemMetadata Include="AdditionalFiles" MetadataName="FileAsClassName"/>
+	</ItemGroup>
 </Project>
